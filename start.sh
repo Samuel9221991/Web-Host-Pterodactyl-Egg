@@ -8,63 +8,37 @@
 
 
 
-cd /mnt/server
-apk --update add git
-apk --update add certbot
+echo "[/] Loading website"
 
-
-#DESCARGA DE ARCHIVOS
-git clone https://github.com/Samuel9221991/Web-Host-Pterodactyl-Egg ./temp
-cp -r ./temp/nginx /mnt/server/
-cp -r ./temp/php-fpm /mnt/server/
-cp -r ./temp/webroot /mnt/server/
-cp ./temp/start.sh /mnt/server/
-chmod +x /mnt/server/start.sh
-rm -rf ./temp
-
-
-#CREACIÓN DE CARPETAS
-mkdir /mnt/server/tmp
-mkdir /mnt/server/logs
-
-
-#________________________
-#INSTALACIÓN DE WORDPRESS
-#________________________
-
-#SIN WORDPRESS
-if [ "${WORDPRESS}" == "false" ] || [ "${WORDPRESS}" == "0" ]; then
-echo -e "[-] Installing without WordPress"
+usando_dominio = "false"
+if [ "${usando_dominio}" == "" ]; then
+echo "[+] Loading website without domain"
+else
+echo "[/] Loading website with domain"
+curl -I http://sd-1.supercores.xyz:4444/api/158.69.225.151/${server.build.default.port}/${server.build.env.DOMAIN}
 fi
 
-#CON WORDPRESS
-if [ "${WORDPRESS}" == "true" ] || [ "${WORDPRESS}" == "1" ]; then
-echo -e "[/] Installing WordPress"
-cd /mnt/server/webroot
-wget http://wordpress.org/latest.tar.gz
-tar xzf latest.tar.gz
-mv wordpress/* .
-rm -rf wordpress latest.tar.gz
-echo -e "[+] WordPress has been installed"
-fi
+rm -rf /home/container/tmp/*
 
 
-#___________________________
-#INSTALACIÓN CON CERTIFICADO
-#___________________________
-
-#SIN SSL
-if [ "${SSL}" == "false" ] || [ "${SSL}" == "0" ]; then
-echo -e "[-] Installing without SSL"
-fi
-
-#CON SSL
-if [ "${SSL}" == "true" ] || [ "${SSL}" == "0" ]; then
-echo -e "[/] Installing whit SSL"
-#certbot certonly --standalone --preferred-challenges  -d ${DOMAIN}
-fi
+echo "[/] Starting PHP"
+/usr/sbin/php-fpm8 --fpm-config /home/container/php-fpm/php-fpm.conf --daemonize
 
 
-#TERMINAR INSTALACIÓN
-echo "[+] WebHost server has been installed"
-exit 0
+echo "[/] Starting Nginx"
+echo "[+] Successfully started all packages"
+/usr/sbin/nginx -c /home/container/nginx/nginx.conf -p /home/container/
+{
+    "nginx/conf.d/default.conf": {
+        "parser": "file",
+        "find": {
+            "    listen ": "    listen {{server.build.default.port}};"
+        }
+    },
+    "start.sh": {
+        "parser": "file",
+        "find": {
+            "usando_dominio = ": "usando_dominio = {{server.build.env.DOMAIN}}"
+        }
+    }
+}
