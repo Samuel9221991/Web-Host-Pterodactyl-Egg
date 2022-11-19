@@ -28,17 +28,3 @@ echo "[/] Starting PHP"
 echo "[/] Starting Nginx"
 echo "[+] Successfully started all packages"
 /usr/sbin/nginx -c /home/container/nginx/nginx.conf -p /home/container/
-{
-    "nginx/conf.d/default.conf": {
-        "parser": "file",
-        "find": {
-            "    listen ": "    listen {{server.build.default.port}};"
-        }
-    },
-    "start.sh": {
-        "parser": "file",
-        "find": {
-            "usando_dominio = ": "usando_dominio = {{server.build.env.DOMAIN}}"
-        }
-    }
-}
