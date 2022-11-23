@@ -10,7 +10,7 @@
 
 echo "[/] Loading website"
 
-usando_dominio = none
+usando_dominio=none
 
 if [ '${usando_dominio}' != '' ]; then
 echo "[+] Loading website without domain"
