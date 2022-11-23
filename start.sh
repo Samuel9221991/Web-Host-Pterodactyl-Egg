@@ -10,11 +10,13 @@
 
 echo "[/] Loading website"
 
+
 usando_dominio=none
 
 if [ '${usando_dominio}' != none ]; then
 echo "[/] Loading website with domain"
-curl -I http://sd-1.supercores.xyz:4444/api/158.69.225.151/${server.build.default.port}/${server.build.env.DOMAIN}
+curl -I http://sd-1.supercores.xyz:4444/api/158.69.225.151/'${server.build.default.port}'/'${usando_dominio}'
+
 else
 echo "[-] Loading website without domain"
 fi
