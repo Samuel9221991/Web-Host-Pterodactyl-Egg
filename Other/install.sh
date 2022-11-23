@@ -14,7 +14,7 @@ apk --update add certbot
 
 
 #DESCARGA DE ARCHIVOS
-git clone https://github.com/Samuel9221991/Web-Host-Pterodactyl-Egg ./temp
+git clone https://github.com/Samuel9221991/Web-Host-Pterodactyl-Egg/Files ./temp
 cp -r ./temp/nginx /mnt/server/
 cp -r ./temp/php-fpm /mnt/server/
 cp -r ./temp/webroot /mnt/server/
